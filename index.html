@@ -1,0 +1,236 @@
+<!-- Time: oge
+Year: afọ
+Person: mmadụ
+People: ndi mmadụ
+Way/ road: ụzọ
+Day: ụbọchị
+Man: nwoke
+Thing: ihe
+Woman: nwanyi
+Life: ndu
+Child: nwa
+World: ụwa
+School: ụlọ akwụkwọ
+State: steeti
+Family: ezinaulo/ ndi be
+Student: nwa akwụkwọ
+Country/place: obodo
+Problem: nsogbu
+Hand: àkà
+Left: aka ekpe
+Right: aka nri/ aka nni
+Nri/nni: food
+Head: ÍSÍ
+Nose: imi
+Mouth: ọnụ
+Ear(s): ntị
+Eyes: anya
+Leg: ukwu
+Foot: ùkwù
+Waist: úkwù
+Body: aru/ahu
+Hair: ntutu isi
+Heart: obi
+Stomach: afo
+Tongue: ire
+Face: ihu/iru
+yebrow: ikuanya
+Butt: ike
+Breast: ara/ala
+Start: mbido
+End: njedebe
+Run: oso
+House: ulo/uno
+Tree: osisi
+Door: uzo
+Shoe: akpukwu
+Week: izu
+Year: afọ
+House: ulo/uno
+Money: ego
+King: Eze
+Queen: Eze nwanyi
+Suitcase: akpati
+Bag: akpa
+Hat/ cap: Okpù
+Cloth: Àkwá
+Spoon: Ngaji
+Chair: Oche
+Knife: mmà
+Plate: efele/ efere
+Chicken: ọkụkọ
+Meat: anụ
+Fish: azụ
+Food: nri
+Breakfast: Nri ututu
+Lunch: Nri ehihie
+Dinner: nri mgbede/ nri abani
+Bottle: karama
+Song: egwu
+New: ọhụrụ
+old: ochie
+work: ọrụ
+teacher: onye nkuzi
+head/boss: onye isi
+breeze: ikuku
+big/ large: nnukwu
+short/ small: obere/ obele
+tall/ long: ogologo/ogonogo
+light: ìhè
+dark/ black: ọjị
+light/ white: ọcha
+water: mmiri
+drink (fizzy): mmanya
+friend: enyi
+gold: ọlaedo
+power/strength: ike
+difficult: siri ike
+easy: mfe
+machine: igwe
+Peace: udo
+Patience: ndidi
+Wisdom: amamihe
+Love: ịhụnanya
+Fear: ụjọ
+Joy: añuri
+Strength: ike
+Tiredness: ike ọgwụgwụ
+Sickness: ọrịa
+Wealth: ogaranya
+Beauty: mmā
+-->
+<body>
+<script>
+function getCards() {
+  var roots = [document, document.head, document.body, document.body && document.body.parentElement];
+  for (var i = 0; i < roots.length; i++) {
+    if (!roots[i] || !roots[i].childNodes) continue;
+    for (var j = 0; j < roots[i].childNodes.length; j++) {
+      var comment = roots[i].childNodes[j];
+      if (comment && comment.nodeType === 8 /* 8 is comment */) {
+        var commentText = comment.textContent || comment.nodeValue || comment.data;
+        if (typeof commentText !== 'string') continue;
+        var result = [];
+        document.childNodes[0].textContent.replace(
+          /(^|\n)([^\:\n]+)\:([^\:\n]+)($|\n)/mg,
+          function(str, lead, one, two) {
+            result.push([
+              one.replace(/^\s*/, '').replace(/\s+$/, ''),
+              two.replace(/^\s*/, '').replace(/\s+$/, '')
+            ]);
+          });
+
+        if (result.length > 2)
+          return result;
+      }
+    }
+  }
+}
+
+/**
+ * @param cards {[string, string][]}
+ */
+function generateCardElements(cards) {
+  /** @type {HTMLElement} */
+  var lastFlip;
+  for (var i = 0; i < cards.length; i++) {
+    var pair = document.createElement('label');
+    pair.className = 'pair';
+    var word = document.createElement('span');
+    word.innerText = cards[i][0];
+    word.className = 'word side';
+    var meaning = document.createElement('span');
+    meaning.innerText = cards[i][1];
+    meaning.className = 'meaning side';
+    pair.appendChild(word);
+    pair.appendChild(meaning);
+    createFlipHandle(pair, word, meaning);
+    document.body.appendChild(pair);
+  }
+
+  /**
+   * @param pair {HTMLElement}
+   * @param word {HTMLElement}
+   * @param meaning {HTMLElement}
+   */
+  function createFlipHandle(pair, word, meaning) {
+    pair.onclick = onClick;
+    /**
+     * @param e {MouseEvent}
+     */
+    function onClick(e) {
+      if (lastFlip) lastFlip.style.zIndex = null;
+      lastFlip = pair;
+      lastFlip.style.zIndex = 5;
+      setTimeout(function() {
+        if (/checked/.test(pair.className))
+          pair.className = pair.className.replace(/\s*checked\s*/, ' ');
+        else
+          pair.className = pair.className.replace(/\s*$/, ' checked');
+      }, 1);
+      if (e.preventDefault) e.preventDefault();
+    }
+  }
+}
+
+document.title = 'Igbo flashcards';
+var cards = getCards();
+generateCardElements(cards);
+</script>
+<style>
+.pair {
+  display: block;
+  margin: 20px;
+  margin-bottom: 50px;
+  width: 90%;
+  height: 60%;
+  font-size: 1300%;
+  opacity: 0.99;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  position: relative;
+}
+.pair .side {
+  position: absolute;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  text-align: center;
+  padding-top: 30%;
+  grid-row: 1; grid-column: 1;
+  background: white;
+  border: solid 1px silver;
+  transition: transform 500ms, box-shadow 500ms;
+  transform-style: preserve-3d;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  box-shadow: 5px 5px 20px #e2e2e2;
+}
+.pair.checked .side {
+  box-shadow: -5px 5px 20px black;
+}
+.pair .meaning {
+  z-index: 1;
+  transform: rotateY(-180deg);
+  background-color: #66a3ff;
+  color: white;
+  text-shadow: 0px 0px 16px black, 0px 0px 16px black;
+  background-image: 
+    repeating-linear-gradient(transparent, transparent 50px, purple 50px, purple 53px, transparent 53px, transparent 63px, purple 63px, purple 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px),  
+    repeating-linear-gradient(270deg, transparent, transparent 50px, purple 50px, purple 53px, transparent 53px, transparent 63px, purple 63px, purple 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px);
+  box-shadow: -5px 5px 20px black;
+}
+.pair.checked .side {
+  transform: rotateY(180deg);
+  box-shadow: 5px 5px 20px black;
+}
+.pair.checked .meaning {
+  transform: rotateY(0deg);
+}
+.pair .word {
+  z-index: 2;
+  backface-visibility: hidden;
+}
+.pair.checked .meaning {
+  display: inherit;
+}
+</style>
+</body>
