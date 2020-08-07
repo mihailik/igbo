@@ -324,9 +324,18 @@ function generateCardElements(cards) {
    */
   function createFlipHandle(pair, word, meaning) {
     var flipTimeout;
+    var moved;
     [pair,word,meaning].map(function(el) {
       ['click', 'mousedown', 'mouseup', 'touchstart', 'touchend'].map(function(ev) {
-        el.addEventListener(ev, onClick);
+        el.addEventListener(ev, function() {
+          if (ev === 'touchend' && moved) return;
+          else if (ev === 'touchstart') moved = false;
+          onClick();
+        });
+      });
+      el.addEventListener('touchmove', function() {
+        clearTimeout(flipTimeout);
+        moved = true;
       });
     });
     var ignoreUntil;
