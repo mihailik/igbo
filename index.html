@@ -324,9 +324,11 @@ function generateCardElements(cards) {
    */
   function createFlipHandle(pair, word, meaning) {
     var flipTimeout;
-    pair.onclick = onClick;
-    pair.onmousedown = onClick;
-    pair.onmouseup = onClick;
+    [pair,word,meaning].map(function(el) {
+      ['click', 'mousedown', 'mouseup', 'touchstart', 'touchend'].map(function(ev) {
+        el.addEventListener(ev, onClick);
+      });
+    });
     var ignoreUntil;
     /**
      * @param e {MouseEvent}
