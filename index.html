@@ -155,7 +155,6 @@ To write: ide
 To speak: ikwu
 To ask: ịjụ (ajụjụ)
 To know: ịma
-
 To come:  ịbịa 
 To give:  inye 
 To stay: ịnọdụ 
@@ -170,7 +169,89 @@ To open : Imeghe (Anambra) Imepe (central)
 To go out,  to leave: Ipu apu 
 To win  : Imeri 
 To remind: Ichetere (reminding someone for example) 
-To remember: Ichete 
+To remember: Ichete
+To wait: Iche  
+To mean to/ to need to/ should: Ikwesi 
+To bath (transitive):  Ịsa (ahụ) 
+To wash (an item) transitive:  Ịsa (ihe)
+To travel:  Ịga njem 
+To pass : Ịgafe
+ To think (a thought)  transitive: Iche (echiche) 
+To pray (a prayer) transitive: Ikpe ekpere 
+To eat (food) transitive: Iri (nri) 
+To hear: Ịnụ 
+To drink: Ịñụ 
+To understand: Ịghọta  
+To seem: Ịdịka  
+To run (transitive): Ịgba(ọsọ) 
+To see:  Ịhụ  
+To love (transitive): Ịhụ (n’anya) 
+To live: Ịdị ndu 
+To live (somewhere) country, place, town: Íbì 
+To return/ to come back: Ịnaghachị  
+To play:  Igwu (egwu) 
+To dance:  Ite (egwu) / Ịgba (egwu)
+To touch: Imetu 
+To work (transitive):  Ịrụ (ọlụ) 
+To try: Ịgbali  
+To simplify:  Igbari  
+To try (To put in effort) transitive:  Ịgba(mbọ) 
+To stop:  Ikwusi 
+To laugh transitive:  Ịchị (ochi) / Ịmụ (amụ)
+To scream:  Ị́chị́ 
+To lead (a country):  Ị̀chị́ 
+To learn: Ịmụ/Ịmụta  
+To hold: Íjìde 
+To use:   Íjí 
+To like:  Ịmasị 
+To buy (something) transitive: Igote (ihe) / Ịzụta (ihe) – Anambra
+To advise:   Ịdụ ọdụ   
+To exchange opinion:  Ịtụ alo 
+To discuss / talk:  Ịkpa nkata 
+To tell a story:  Ịkọ akụkọ  
+To banter/ joke: Ịma (njakiri) 
+To hiss/ kiss your teeth:  ịma osu 
+To remove:  Iwepu 
+To add: Ịgbakọ 
+To bring:  Iweta 
+To call:  Ịkpọ  
+To come in:  Ịbata  
+To come out:  Ịpụta  
+To read:  Ịgụ 
+To count  (transitive): Ịgụ (onuọgụgu) 
+To cry:  Ibe akwa 
+To draw (something): Ise (ihe) 
+To bring: Inweta  
+To scream:  Ịchị  
+To hear/ to listen transitive: Ịna (ntị) /  Ige (ntị)
+To look/ to watch: Ine/inene 
+To tell: Ịgwa  
+To walk (transitive):  Ịga (Ije) 
+To teach: Ịkụzị 
+To take something  (transitive):  Iwere (ihe) 
+To sleep:  ịhị ụra/ ịrahụ ụra 
+
+To speak a language (transitive):  Ịsụ (asusu) 
+To read a book (transitive):  Ịgụ (akwụkwọ) 
+To spend money  (transitive):  Iri (ego)  
+To waste money (transitive):  Imefu (ego) 
+To make money  (transitive): Ịkpata (ego) 
+To gossip (transitive):  Ịgba (izu) 
+To sell (transitive):  Ire(ihe) 
+To sweep:   Ị́zà 
+To answer:   Ị́zá 
+To chew/bite:  Ịta 
+To warm:  Ída 
+To fail (an exam):  Ìdà  
+ 
+To roast:  Ími 
+To fry: Íghe 
+To kiss (transitive):  Ísụsụ (ọnụ) 
+To embrace  (transitive): Íbi (ọma) 
+To shout  (transitive):  Iba mbá 
+To hug:  Imaku  
+To affect emotionally  (to touch you) : Ímetụ n’obi 
+ 
 -->
 <body>
 <button id=randomise>randomise</button>
@@ -246,11 +327,13 @@ function generateCardElements(cards) {
     pair.onclick = onClick;
     pair.onmousedown = onClick;
     pair.onmouseup = onClick;
+    var ignoreUntil;
     /**
      * @param e {MouseEvent}
      */
     function onClick(e) {
       clearTimeout(flipTimeout);
+      if (Date.now()<ignoreUntil) return;
       flipTimeout = setTimeout(onClickHandle, 100);
     }
 
@@ -264,6 +347,7 @@ function generateCardElements(cards) {
         else
           pair.className = pair.className.replace(/\s*$/, ' checked');
       }, 1);
+      ignoreUntil = Date.now() + 300;
     }
   }
 }
@@ -277,7 +361,7 @@ function updateCardStyles() {
   document.body.style.width = '100%';
   document.body.style.height = '100%';
 
-  var tileW = 300, tileH = 500;
+  var tileW = 400, tileH = 500;
   var docElement = document.body.parentElement;
   var w = window.innerWidth || docElement.offsetWidth || tileW;
   var h = window.innerHeight || docElement.offsetHeight || tileH;
