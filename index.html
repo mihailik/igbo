@@ -20,7 +20,7 @@ Problem: nsogbu
 Hand: àkà
 Left: aka ekpe
 Right: aka nri/ aka nni
-Nri/nni: food
+food: Nri/nni
 Head: ÍSÍ
 Nose: imi
 Mouth: ọnụ
@@ -62,7 +62,6 @@ Plate: efele/ efere
 Chicken: ọkụkọ
 Meat: anụ
 Fish: azụ
-Food: nri
 Breakfast: Nri ututu
 Lunch: Nri ehihie
 Dinner: nri mgbede/ nri abani
@@ -157,6 +156,21 @@ To speak: ikwu
 To ask: ịjụ (ajụjụ)
 To know: ịma
 
+To come:  ịbịa 
+To give:  inye 
+To stay: ịnọdụ 
+To put:  itinye 
+To say: Ị̀sị̀  
+To cook: Transitive Ị́sị́ (nri) 
+To wear : Ìyì(ri) Ísù (uwe) Transitive  *Uwe is an item of clothing*  
+To look like: Ìyí 
+To show/ to display: Igosi (Anambra) Izi (central) 
+To follow : Isò 
+To open : Imeghe (Anambra) Imepe (central) 
+To go out,  to leave: Ipu apu 
+To win  : Imeri 
+To remind: Ichetere (reminding someone for example) 
+To remember: Ichete 
 -->
 <body>
 <button id=randomise>randomise</button>
@@ -287,7 +301,7 @@ function updateCardStyles() {
   tileW = tileW - margin;
   tileH = tileH - margin;
 
-  var fontSize = (tileW / 10).toFixed(1) + 'px';
+  var fontSize = (tileW / 8).toFixed(1) + 'px';
 
   var styleText =
   'label.pair { width: ' + tileW + 'px; height: ' + tileH + 'px; display: inline-block; font-size: '+fontSize+'; margin: 0; margin-left: ' + margin +'px; margin-top: ' + margin + 'px; }';
@@ -399,16 +413,22 @@ body {
 
 #randomise {
   position: absolute;
-  top: -6em;
-  right: -6em;
+  top: 0.2em;
+  right: 0.2em;
   z-index: 12;
-  width: 12em; height: 12em;
+  width: 12em;
+  height: 12em;
   border-radius: 12em;
   overflow: hidden;
-  padding-top: 5%;
   text-align: center;
   transform: rotate(45deg);
-  box-shadow: 10px 3px 13px rgba(0, 0, 0,  0.61), inset -2px 2px 13px rgb(0 0 0);
+  box-shadow: 10px 3px 13px rgba(0, 0, 0, 0.61), inset -8px -2px 13px rgb(1 62 113);
+  border: solid 1px cornflowerblue;
+  color: royalblue;
+  outline: none;
+}
+#randomise:focus {
+  box-shadow: 10px 3px 13px rgba(0, 0, 0,  0.61), inset -10px -2px 13px rgb(1 62 113), 1px 1px 3px 4px cornflowerblue;
 }
 #randomize:after {
   content: "*";
