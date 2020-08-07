@@ -1,3 +1,4 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
 <!-- Time: oge
 Year: afọ
 Person: mmadụ
@@ -19,7 +20,7 @@ Problem: nsogbu
 Hand: àkà
 Left: aka ekpe
 Right: aka nri/ aka nni
-food: Nri/nni
+Nri/nni: food
 Head: ÍSÍ
 Nose: imi
 Mouth: ọnụ
@@ -34,7 +35,7 @@ Heart: obi
 Stomach: afo
 Tongue: ire
 Face: ihu/iru
-eyebrow: ikuanya
+yebrow: ikuanya
 Butt: ike
 Breast: ara/ala
 Start: mbido
@@ -98,8 +99,68 @@ Tiredness: ike ọgwụgwụ
 Sickness: ọrịa
 Wealth: ogaranya
 Beauty: mmā
+I: m
+You (singular): i / ị
+He/she/it: o / ọ
+Mine: m / mụ
+Yours (singular): gị
+his/her/its: ya
+we/ours: anyị
+you or yours (plural): ụnụ
+they or theirs: ha / fa
+your brother: nwanne gi nwoke
+their sister: nwańné ha nwanyì
+your (plural) father: Ńnà unu
+your wife: nwunye gi
+all of us: anyị nile
+all of you: ụnụ nile
+all of them: ha nile
+who: onye
+what: gịnị
+which: nke ole
+how: kedu
+why: maka gịnị
+when: mgbe ole
+where: ebee
+who are you: onye ka I bu? / Ke onye I bu?
+I am {insert name}: a bu m {insert name}
+and you?: gi kwanu?
+Where are you from?: Onye ebee ka I bu?
+What is your name?: Gini bu aha gi?
+Which one is your bag?: Nke ole bu akpati gi?
+HE IS LOOKING FOR TROUBLE. WHY?: O na cho nsogbu. Maka gini?
+Where do you live? Ebee ka I bi?
+When will isolation stop?: Mgbe ole ka isolation ga-akwusi ?
+Nke a – this, Nke ahụ – that
+these (group): Ndị a
+those (group): Ndị ahụ
+this (thing): Ihe a
+that (thing): Ihe ahụ
+here: ebe a
+there: ebe ahụ
+To be – used for telling someone about yourself: ịbụ
+I am a teacher: A bụ m onye nkụzi
+To be - used for feelings/saying where you’re at: ịnọ 
+Are you okay?: ị nọ ohuma?
+I am at home: A nọ m na ụlọ
+To be - used for talking about feelings: ịdị 
+I am fine: A dị m mma
+To carry: Ìbù
+To have (something): inwe (ihe)
+To go: ịga (central) ije (Anambra)
+To be able to/Can: inwe ike
+To want: ịchọ
+To find/look for: ịchọta/ ịchọ́
+To do: ime
+To write: ide
+To speak: ikwu
+To ask: ịjụ (ajụjụ)
+To know: ịma
+
 -->
 <body>
+<button id=randomise>randomise</button>
+
 <script>
 function getCards() {
   var roots = [document, document.head, document.body, document.body && document.body.parentElement];
@@ -111,7 +172,7 @@ function getCards() {
         var commentText = comment.textContent || comment.nodeValue || comment.data;
         if (typeof commentText !== 'string') continue;
         var result = [];
-        document.childNodes[0].textContent.replace(
+        comment.textContent.replace(
           /(^|\n)([^\:\n]+)\:([^\:\n]+)($|\n)/mg,
           function(str, lead, one, two) {
             result.push([
@@ -133,6 +194,19 @@ function getCards() {
 function generateCardElements(cards) {
   /** @type {HTMLElement} */
   var lastFlip;
+  var body = document.body;
+  for (var i = 0; i < body.childNodes.length; i++) {
+    /** @type {HTMLElement} */
+    var child  = body.childNodes[i];
+    if (child && /label/i.test(child.tagName || '') && /pair/i.test(child.className || '')) {
+      body.removeChild(child);
+      i--;
+      continue;
+    }
+  }
+
+  updateCardStyles();
+
   for (var i = 0; i < cards.length; i++) {
     var pair = document.createElement('label');
     pair.className = 'pair';
@@ -154,11 +228,19 @@ function generateCardElements(cards) {
    * @param meaning {HTMLElement}
    */
   function createFlipHandle(pair, word, meaning) {
+    var flipTimeout;
     pair.onclick = onClick;
+    pair.onmousedown = onClick;
+    pair.onmouseup = onClick;
     /**
      * @param e {MouseEvent}
      */
     function onClick(e) {
+      clearTimeout(flipTimeout);
+      flipTimeout = setTimeout(onClickHandle, 100);
+    }
+
+    function onClickHandle(e) {
       if (lastFlip) lastFlip.style.zIndex = null;
       lastFlip = pair;
       lastFlip.style.zIndex = 5;
@@ -168,22 +250,101 @@ function generateCardElements(cards) {
         else
           pair.className = pair.className.replace(/\s*$/, ' checked');
       }, 1);
-      if (e.preventDefault) e.preventDefault();
     }
   }
 }
 
+function updateCardStyles() {
+  if (!updateCardStyles.style) {
+    updateCardStyles.style = document.createElement('style');
+    document.body.appendChild(updateCardStyles.style);
+  }
+
+  document.body.style.width = '100%';
+  document.body.style.height = '100%';
+
+  var tileW = 300, tileH = 500;
+  var docElement = document.body.parentElement;
+  var w = window.innerWidth || docElement.offsetWidth || tileW;
+  var h = window.innerHeight || docElement.offsetHeight || tileH;
+  w-=20;
+  h--;
+  
+  if (w<tileH || h < tileH) {
+    var scale = Math.min(w/tileW*0.97, h/tileH);
+    tileW = (tileW*scale)|0;
+    tileH = (tileH*scale)|0;
+    console.log('scaled layout for at least single card: ', {w,h, tileW, tileH});
+  }
+  else {
+    var updateTileW = (w/Math.round(w/tileW))|0;
+    tileH = Math.round(tileH * updateTileW / tileW);
+    tileW = updateTileW;
+    console.log('fit layout for ', Math.round(w/tileW), ' columns: ', {w,h, tileW, tileH});
+  }
+
+  var margin = (tileW * 0.05)|0;
+  tileW = tileW - margin;
+  tileH = tileH - margin;
+
+  var fontSize = (tileW / 10).toFixed(1) + 'px';
+
+  var styleText =
+  'label.pair { width: ' + tileW + 'px; height: ' + tileH + 'px; display: inline-block; font-size: '+fontSize+'; margin: 0; margin-left: ' + margin +'px; margin-top: ' + margin + 'px; }';
+  if ('textContent' in updateCardStyles.style)
+    updateCardStyles.style.textContent = styleText;
+  else if ('text' in updateCardStyles.style)
+    updateCardStyles.style.text = styleText;
+  else
+    updateCardStyles.style.innerHTML = styleText;
+}
+
+
 document.title = 'Igbo flashcards';
 var cards = getCards();
 generateCardElements(cards);
+if (typeof window.addEventListener === 'function')
+  window.addEventListener('resize', updateCardStyles);
+else
+  window.onresize = updateCardStyles;
+
+var randomise = document.getElementById('randomise');
+if (randomise) {
+  randomise.onclick = function() {
+    var cardSorter = [];
+    for (var i = 0; i < cards.length; i++) {
+      cardSorter.push({ card: cards[i], index: Math.random() });
+    }
+    cardSorter.sort(function(s1, s2) { return s1.index - s2.index; });
+    var randomCards = [];
+    for (var i = 0; i < cardSorter.length; i++) {
+      randomCards.push(cardSorter[i].card);
+    }
+
+    generateCardElements(randomCards);
+  };
+}
 </script>
 <style>
+  html {
+  box-sizing: border-box;
+  width: 100%; height: 100%; margin: 0; padding: 0;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+body {
+  width: 100%; height: 100%; margin: 0; padding: 0;
+  overflow-x: hidden;
+}
+
 .pair {
   display: block;
-  margin: 20px;
-  margin-bottom: 50px;
+  margin: 1em;
+  margin-bottom: 2em;
   width: 90%;
   height: 80%;
+  min-height: 5em;
   font-size: 1300%;
   opacity: 0.99;
   perspective: 1000px;
@@ -192,10 +353,10 @@ generateCardElements(cards);
 }
 .pair .side {
   position: absolute;
+  overflow: hidden;
   top: 0; left: 0;
   right: 0; bottom: 0;
   text-align: center;
-  padding-top: 30%;
   grid-row: 1; grid-column: 1;
   background: white;
   border: solid 1px silver;
@@ -203,6 +364,10 @@ generateCardElements(cards);
   transform-style: preserve-3d;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   box-shadow: 5px 5px 20px #e2e2e2;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .pair.checked .side {
   box-shadow: -5px 5px 20px black;
@@ -230,7 +395,26 @@ generateCardElements(cards);
   backface-visibility: hidden;
 }
 .pair.checked .meaning {
-  display: inherit;
+}
+
+#randomise {
+  position: absolute;
+  top: -6em;
+  right: -6em;
+  z-index: 12;
+  width: 12em; height: 12em;
+  border-radius: 12em;
+  overflow: hidden;
+  padding-top: 5%;
+  text-align: center;
+  transform: rotate(45deg);
+  box-shadow: 10px 3px 13px rgba(0, 0, 0,  0.61), inset -2px 2px 13px rgb(0 0 0);
+}
+#randomize:after {
+  content: "*";
+  position: absolute;
+  text-align: center;
+  z-index: 11;
 }
 </style>
 </body>
