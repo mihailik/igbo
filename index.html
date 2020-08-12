@@ -282,6 +282,13 @@ function getCards() {
   }
 }
 
+var flipTimeout;
+var moved;
+window.addEventListener('scroll', function() {
+  clearTimeout(flipTimeout);
+  moved = true;
+});
+
 /**
  * @param cards {[string, string][]}
  */
@@ -322,14 +329,12 @@ function generateCardElements(cards) {
    * @param meaning {HTMLElement}
    */
   function createFlipHandle(pair, word, meaning) {
-    var flipTimeout;
-    var moved;
     [pair,word,meaning].map(function(el) {
       ['click', 'mousedown', 'mouseup', 'touchstart', 'touchend'].map(function(ev) {
         el.addEventListener(ev, function() {
           if (ev === 'touchend' && moved) return;
           else if (ev === 'touchstart') moved = false;
-          onClick(ev === 'touchstart' ? 600 : 100);
+          onClick(ev === 'touchstart' || ev === 'mousedowns' ? 600 : 100);
         });
       });
       el.addEventListener('touchmove', function() {
