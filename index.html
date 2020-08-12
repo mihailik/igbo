@@ -334,7 +334,7 @@ function generateCardElements(cards) {
         el.addEventListener(ev, function() {
           if (ev === 'touchend' && moved) return;
           else if (ev === 'touchstart') moved = false;
-          onClick(ev === 'touchstart' || ev === 'mousedowns' ? 600 : 100);
+          onClick(ev === 'touchstart' || ev === 'mousedown' ? 600 : 100);
         });
       });
       el.addEventListener('touchmove', function() {
